@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --cream: #F7F2EB;
+    --warm-white: #FDF9F4;
+    --charcoal: #1C1A17;
+    --espresso: #2E2218;
+    --gold: #B8860B;
+    --gold-light: #D4A843;
+    --stone: #8C7B6B;
+    --rose: #C4856A;
+    --border: rgba(184,134,11,0.25);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--charcoal);
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.4rem 4rem;
+    background: rgba(28,26,23,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 300; letter-spacing: 0.2em;
+    color: var(--gold-light);
+    text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 2.5rem; }
+  .nav-links a {
+    font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--cream); opacity: 0.75; text-decoration: none;
+    transition: opacity 0.2s, color 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--gold-light); }
+  .nav-cta {
+    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 0.6rem 1.6rem;
+    border: 0.5px solid var(--gold);
+    color: var(--gold-light); background: transparent;
+    cursor: pointer; transition: background 0.25s, color 0.25s;
+    font-family: 'Jost', sans-serif;
+  }
+  .nav-cta:hover { background: var(--gold); color: var(--charcoal); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 60%, rgba(184,134,11,0.08) 0%, transparent 70%),
+      var(--charcoal);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.015) 60px),
+      repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.015) 60px);
+    pointer-events: none;
+  }
+  .hero-tag {
+    font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.8rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-tag::before, .hero-tag::after {
+    content: ''; display: block; width: 40px; height: 0.5px; background: var(--gold); opacity: 0.6;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 9vw, 7rem);
+    font-weight: 300; line-height: 1.05;
+    color: var(--warm-white);
+    margin-bottom: 0.3rem;
+  }
+  .hero h1 em {
+    font-style: italic; color: var(--gold-light);
+  }
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-weight: 300; font-style: italic;
+    color: var(--stone); margin: 1.2rem 0 3rem;
+    letter-spacing: 0.05em;
+  }
+  .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    padding: 0.9rem 2.8rem;
+    background: var(--gold); color: var(--charcoal);
+    border: none; cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
+    transition: background 0.25s;
+  }
+  .btn-primary:hover { background: var(--gold-light); }
+  .btn-ghost {
+    padding: 0.9rem 2.8rem;
+    background: transparent; color: var(--cream);
+    border: 0.5px solid rgba(247,242,235,0.35); cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 300;
+    transition: border-color 0.25s, color 0.25s;
+  }
+  .btn-ghost:hover { border-color: var(--cream); }
+  .hero-scroll {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--stone); opacity: 0.7;
+    animation: bob 2s ease-in-out infinite;
+  }
+  .scroll-line { width: 0.5px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); }
+  @keyframes bob { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+  /* DIVIDER */
+  .ornament {
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+    padding: 2rem 0;
+    color: var(--gold); opacity: 0.5; font-size: 1.1rem;
+    letter-spacing: 0.4em;
+  }
+  .ornament::before, .ornament::after {
+    content: ''; flex: 1; max-width: 120px; height: 0.5px; background: var(--gold); opacity: 0.6;
+  }
+
+  /* ABOUT */
+  .about {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    max-width: 1100px; margin: 0 auto; padding: 5rem 3rem;
+    align-items: center;
+  }
+  .about-text { padding-right: 5rem; }
+  .section-label {
+    font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.5rem;
+  }
+  .about h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 300; line-height: 1.2;
+    color: var(--warm-white); margin-bottom: 1.5rem;
+  }
+  .about h2 em { font-style: italic; color: var(--gold-light); }
+  .about p {
+    font-size: 0.92rem; line-height: 1.85; color: var(--stone); font-weight: 300;
+    margin-bottom: 1rem;
+  }
+  .about-visual {
+    position: relative;
+    background: var(--espresso);
+    border: 0.5px solid var(--border);
+    min-height: 380px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .about-visual::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(184,134,11,0.12), transparent 60%),
+      radial-gradient(circle at 70% 70%, rgba(196,133,106,0.08), transparent 60%);
+  }
+  .plate-art {
+    position: relative; z-index: 1; text-align: center;
+  }
+  .plate-circle {
+    width: 180px; height: 180px; border-radius: 50%;
+    border: 0.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto;
+    position: relative;
+  }
+  .plate-circle::before {
+    content: ''; position: absolute; inset: 12px; border-radius: 50%;
+    border: 0.5px solid rgba(184,134,11,0.15);
+  }
+  .plate-inner {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem; color: var(--gold); opacity: 0.8;
+  }
+  .plate-label {
+    margin-top: 1.5rem;
+    font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--stone);
+  }
+  .about-stats {
+    display: flex; gap: 2.5rem; margin-top: 2rem;
+    padding-top: 2rem; border-top: 0.5px solid var(--border);
+  }
+  .stat span { display: block; }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem; font-weight: 300; color: var(--gold-light); line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--stone); margin-top: 0.3rem;
+  }
+
+  /* MENU SECTION */
+  .menu-section {
+    padding: 5rem 3rem;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .section-header { text-align: center; margin-bottom: 3.5rem; }
+  .section-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 300; color: var(--warm-white);
+  }
+  .section-header h2 em { font-style: italic; color: var(--gold-light); }
+  .menu-tabs {
+    display: flex; justify-content: center; gap: 0; margin-bottom: 3rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .menu-tab {
+    padding: 0.7rem 2rem;
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    background: transparent; border: none; color: var(--stone);
+    cursor: pointer; font-family: 'Jost', sans-serif;
+    border-bottom: 1px solid transparent; margin-bottom: -0.5px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .menu-tab.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+  .menu-tab:hover:not(.active) { color: var(--cream); }
+  .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .menu-item {
+    padding: 1.8rem 0;
+    border-bottom: 0.5px solid var(--border);
+    display: flex; justify-content: space-between; align-items: start;
+    gap: 2rem;
+  }
+  .menu-item:nth-child(odd) { padding-right: 3rem; border-right: 0.5px solid var(--border); }
+  .menu-item:nth-child(even) { padding-left: 3rem; }
+  .menu-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem; font-weight: 400; color: var(--warm-white);
+    margin-bottom: 0.35rem;
+  }
+  .menu-desc {
+    font-size: 0.8rem; color: var(--stone); line-height: 1.6; font-weight: 300;
+  }
+  .menu-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; color: var(--gold);
+    white-space: nowrap; padding-top: 0.1rem;
+  }
+
+  /* TESTIMONIALS */
+  .testimonials {
+    background: var(--espresso);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    padding: 5rem 3rem;
+  }
+  .testimonials-inner { max-width: 900px; margin: 0 auto; }
+  .quote-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-top: 3rem; }
+  .quote-card {
+    padding: 2rem;
+    border: 0.5px solid var(--border);
+    position: relative;
+  }
+  .quote-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem; line-height: 0.8;
+    color: var(--gold); opacity: 0.25;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .quote-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; font-style: italic; font-weight: 300;
+    color: var(--cream); line-height: 1.7; margin-bottom: 1.5rem;
+  }
+  .quote-author {
+    font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold);
+  }
+  .stars { color: var(--gold); font-size: 0.75rem; margin-bottom: 0.5rem; letter-spacing: 0.1em; }
+
+  /* RESERVATION */
+  .reservation {
+    max-width: 680px; margin: 0 auto; padding: 6rem 3rem;
+    text-align: center;
+  }
+  .reservation h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 300; color: var(--warm-white); margin-bottom: 0.5rem;
+  }
+  .reservation h2 em { font-style: italic; color: var(--gold-light); }
+  .reservation p { font-size: 0.88rem; color: var(--stone); margin-bottom: 2.5rem; font-weight: 300; }
+  .res-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left; }
+  .res-form .full { grid-column: 1 / -1; }
+  .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-field label {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--stone);
+  }
+  .form-field input, .form-field select {
+    background: transparent;
+    border: 0.5px solid rgba(184,134,11,0.3);
+    color: var(--cream);
+    padding: 0.75rem 1rem;
+    font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 300;
+    outline: none; width: 100%;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+  .form-field input::placeholder { color: var(--stone); opacity: 0.5; }
+  .form-field input:focus, .form-field select:focus { border-color: var(--gold); }
+  .form-field select option { background: var(--charcoal); }
+  .res-submit {
+    grid-column: 1 / -1; margin-top: 0.5rem;
+    padding: 1rem; background: var(--gold); border: none; color: var(--charcoal);
+    font-family: 'Jost', sans-serif; font-size: 0.78rem; letter-spacing: 0.2em;
+    text-transform: uppercase; font-weight: 500; cursor: pointer;
+    transition: background 0.25s; width: 100%;
+  }
+  .res-submit:hover { background: var(--gold-light); }
+
+  /* FOOTER */
+  footer {
+    background: var(--espresso);
+    border-top: 0.5px solid var(--border);
+    padding: 3rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 2rem; flex-wrap: wrap;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; font-weight: 300; letter-spacing: 0.2em;
+    color: var(--gold-light); text-transform: uppercase;
+  }
+  .footer-info { font-size: 0.78rem; color: var(--stone); line-height: 2; font-weight: 300; }
+  .footer-hours { font-size: 0.78rem; color: var(--stone); text-align: right; line-height: 2; font-weight: 300; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-tag { animation: fadeUp 0.7s ease both; }
+  .hero h1 { animation: fadeUp 0.7s 0.15s ease both; }
+  .hero-sub { animation: fadeUp 0.7s 0.3s ease both; }
+  .hero-btns { animation: fadeUp 0.7s 0.45s ease both; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Maison Noir</div>
+  <div class="nav-links">
+    <a href="#about">Our Story</a>
+    <a href="#menu">Menu</a>
+    <a href="#reserve">Reserve</a>
+  </div>
+  <button class="nav-cta">Book a Table</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-tag">Est. 2018 &mdash; Milano</div>
+  <h1>Where Every<br/><em>Dish Tells</em><br/>a Story</h1>
+  <p class="hero-sub">Contemporary Italian cuisine, crafted with memory and intention</p>
+  <div class="hero-btns">
+    <button class="btn-primary">Reserve Tonight</button>
+    <button class="btn-ghost">Explore the Menu</button>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Discover
+  </div>
+</section>
+
+<div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+<section class="about" id="about">
+  <div class="about-text">
+    <p class="section-label">Our Philosophy</p>
+    <h2>Food as a form<br/><em>of memory</em></h2>
+    <p>Born from a single kitchen in Navigli, Maison Noir has always believed that great food is an act of remembrance — a way of honoring the hands that came before.</p>
+    <p>Each dish is drawn from seasons, markets, and moments. We cook what is here, now, and true.</p>
+    <div class="about-stats">
+      <div class="stat">
+        <span class="stat-num">12</span>
+        <span class="stat-label">Years of craft</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">3</span>
+        <span class="stat-label">Michelin stars</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">40</span>
+        <span class="stat-label">Covers nightly</span>
+      </div>
+    </div>
+  </div>
+  <div class="about-visual">
+    <div class="plate-art">
+      <div class="plate-circle">
+        <div class="plate-inner">✦</div>
+      </div>
+      <div class="plate-label">Handcrafted Daily</div>
+    </div>
+  </div>
+</section>
+
+<section class="menu-section" id="menu">
+  <div class="section-header">
+    <p class="section-label">Seasonal Selection</p>
+    <h2>Tonight's <em>Menu</em></h2>
+  </div>
+  <div class="menu-tabs">
+    <button class="menu-tab active">Antipasti</button>
+    <button class="menu-tab">Primi</button>
+    <button class="menu-tab">Secondi</button>
+    <button class="menu-tab">Dolci</button>
+  </div>
+  <div class="menu-grid" id="menu-grid">
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">Burrata di Puglia</div>
+        <div class="menu-desc">Heirloom tomatoes, basil oil, Maldon salt</div>
+      </div>
+      <div class="menu-price">€18</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">Tartare di Manzo</div>
+        <div class="menu-desc">Grass-fed beef, capers, quail yolk, truffle</div>
+      </div>
+      <div class="menu-price">€24</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">Carpaccio di Polpo</div>
+        <div class="menu-desc">Slow-braised octopus, lemon gel, nduja</div>
+      </div>
+      <div class="menu-price">€22</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">Crostini al Fegato</div>
+        <div class="menu-desc">Chicken liver, vin santo reduction, sage</div>
+      </div>
+      <div class="menu-price">€16</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">Zuppa di Cicerchie</div>
+        <div class="menu-desc">Ancient grain legume, smoked ricotta, oil</div>
+      </div>
+      <div class="menu-price">€14</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-name">Fiore di Zucca Fritto</div>
+        <div class="menu-desc">Zucchini blossom, ricotta, anchovy, herbs</div>
+      </div>
+      <div class="menu-price">€15</div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="testimonials-inner">
+    <div class="section-header">
+      <p class="section-label">Voices</p>
+      <h2>What our guests <em>say</em></h2>
+    </div>
+    <div class="quote-grid">
+      <div class="quote-card">
+        <span class="quote-mark">"</span>
+        <div class="stars">★★★★★</div>
+        <p class="quote-text">An evening so beautifully orchestrated it felt like theatre. Every course a revelation.</p>
+        <div class="quote-author">Isabella R. — Rome</div>
+      </div>
+      <div class="quote-card">
+        <span class="quote-mark">"</span>
+        <div class="stars">★★★★★</div>
+        <p class="quote-text">The kind of restaurant you return to for anniversaries and then for no reason at all.</p>
+        <div class="quote-author">Marco T. — Florence</div>
+      </div>
+      <div class="quote-card">
+        <span class="quote-mark">"</span>
+        <div class="stars">★★★★★</div>
+        <p class="quote-text">Intimate, precise, and deeply moving. This is what Italian cooking can be.</p>
+        <div class="quote-author">Sophie L. — Paris</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="reservation" id="reserve">
+  <p class="section-label">Reservations</p>
+  <h2>Join us for<br/><em>an evening</em></h2>
+  <p>We seat forty guests each evening. We recommend booking at least one week in advance.</p>
+  <div class="res-form">
+    <div class="form-field">
+      <label>First Name</label>
+      <input type="text" placeholder="Marco" />
+    </div>
+    <div class="form-field">
+      <label>Last Name</label>
+      <input type="text" placeholder="Rossi" />
+    </div>
+    <div class="form-field">
+      <label>Date</label>
+      <input type="date" />
+    </div>
+    <div class="form-field">
+      <label>Guests</label>
+      <select>
+        <option>2 guests</option>
+        <option>3 guests</option>
+        <option>4 guests</option>
+        <option>5+ guests</option>
+      </select>
+    </div>
+    <div class="form-field full">
+      <label>Email</label>
+      <input type="email" placeholder="marco@example.com" />
+    </div>
+    <button class="res-submit">Request Reservation</button>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Maison Noir</div>
+  <div class="footer-info">
+    Via Navigli 14, Milano<br/>
+    +39 02 1234 5678<br/>
+    info@maisonnoir.it
+  </div>
+  <div class="footer-hours">
+    Tue – Sat<br/>
+    19:00 – 23:30<br/>
+    Closed Sunday & Monday
+  </div>
+</footer>
+
+<script>
+const menus = {
+  Antipasti: [
+    {name:'Burrata di Puglia', desc:'Heirloom tomatoes, basil oil, Maldon salt', price:'€18'},
+    {name:'Tartare di Manzo', desc:'Grass-fed beef, capers, quail yolk, truffle', price:'€24'},
+    {name:'Carpaccio di Polpo', desc:'Slow-braised octopus, lemon gel, nduja', price:'€22'},
+    {name:'Crostini al Fegato', desc:'Chicken liver, vin santo reduction, sage', price:'€16'},
+    {name:'Zuppa di Cicerchie', desc:'Ancient grain legume, smoked ricotta, oil', price:'€14'},
+    {name:'Fiore di Zucca Fritto', desc:'Zucchini blossom, ricotta, anchovy, herbs', price:'€15'},
+  ],
+  Primi: [
+    {name:'Tagliolini al Tartufo', desc:'Black truffle, butter, aged parmigiano', price:'€38'},
+    {name:'Risotto al Barolo', desc:'Castelmagno, bone marrow, rosemary', price:'€34'},
+    {name:'Tortelli di Zucca', desc:'Butternut, amaretti, mostarda vicentina', price:'€28'},
+    {name:'Spaghetto alle Vongole', desc:'Veraci clams, white wine, chilli, parsley', price:'€30'},
+    {name:'Gnocchi di Patate', desc:'Duck ragù, pecorino, wild thyme', price:'€26'},
+    {name:'Pasta e Fagioli', desc:'Borlotti beans, guanciale, smoked paprika', price:'€22'},
+  ],
+  Secondi: [
+    {name:'Piccione in Due Cotture', desc:'Roasted breast, confit leg, foie gras jus', price:'€52'},
+    {name:'Filetto di Branzino', desc:'Sea bass, fennel, saffron, Amalfi lemon', price:'€44'},
+    {name:'Costata di Manzo', desc:'Dry-aged rib, bone marrow, salsa verde', price:'€68'},
+    {name:'Agnello delle Langhe', desc:'Rack of lamb, olive tapenade, jus', price:'€56'},
+    {name:'Faraona Arrosto', desc:'Guinea fowl, chestnuts, pancetta, sage', price:'€46'},
+    {name:'Branzino in Crosta', desc:'Salt-baked bass, herbs, lemon butter', price:'€48'},
+  ],
+  Dolci: [
+    {name:'Tiramisù della Casa', desc:'Espresso-soaked savoiardi, mascarpone', price:'€14'},
+    {name:'Panna Cotta al Miele', desc:'Acacia honey, caramelised pear, almond', price:'€12'},
+    {name:'Fondente al Cioccolato', desc:'70% Valrhona, salted caramel, hazelnut', price:'€15'},
+    {name:'Cannolo Siciliano', desc:'Ricotta, pistachios, candied orange peel', price:'€13'},
+    {name:'Sorbetto al Limone', desc:'Amalfi lemon, prosecco granita', price:'€10'},
+    {name:'Formaggi Stagionati', desc:'Selection of aged Italian cheeses, honey', price:'€22'},
+  ],
+};
+
+document.querySelectorAll('.menu-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const key = tab.textContent.trim();
+    const grid = document.getElementById('menu-grid');
+    grid.innerHTML = menus[key].map(item => `
+      <div class="menu-item">
+        <div>
+          <div class="menu-name">${item.name}</div>
+          <div class="menu-desc">${item.desc}</div>
+        </div>
+        <div class="menu-price">${item.price}</div>
+      </div>
+    `).join('');
+  });
+});
+</script>
+</body>
+</html>
